@@ -1,7 +1,7 @@
 // Main script to construct the noise field
 let img;
 let fitToScreen = true;
-let lineLengthSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, colorSelect;
+let lineLengthSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, colorSelect, windowWidth, windowHeight;
 
 // Load obama on start
 function preload() {
@@ -72,20 +72,9 @@ function makeControls() {
     let colorHeader = createDiv("<h3>Color</h3>");
     colorHeader.parent(controlWrapper);
     colorSelect = makeSelect("Color Setting", options = ["Black and White", "Original"], value = "Black and White", parent = controlWrapper, drawOnce)
-    // particleSlider = makeSlider("Number of Particles", minVal = 10, maxVal = 10000, value = 500, step = 10, parent = controlWrapper, clearContent);
-    // opacitySlider = makeSlider("Opacity", minVal = 1, maxVal = 100, value = 30, step = 1, parent = controlWrapper);
-    // strokeWeightSlider = makeSlider("Stroke Weight", minVal = .5, maxVal = 20, value = 2, step = .5, parent = controlWrapper);
-    // nrowSlider = makeSlider("Vertical Anchors", minVal = 2, maxVal = 50, value = 30, step = 1, parent = controlWrapper, clearContent);
-    // ncolSlider = makeSlider("Horizontal Anchors", minVal = 2, maxVal = 50, value = 30, step = 1, parent = controlWrapper, clearContent);
-    // xIncrementSlider = makeSlider("Horizontal Smoothness", minVal = .0001, maxVal = .3, value = .05, step = .0001, parent = controlWrapper, clearContent);
-    // yIncrementSlider = makeSlider("Vertical Smoothness", minVal = .0001, maxVal = .3, value = .05, step = .0001, parent = controlWrapper, clearContent);
-    // zIncrementSlider = makeSlider("Fluctuations in Forces", minVal = 0, maxVal = .3, value = .01, step = .0001, parent = controlWrapper, clearContent);
-    // speedSlider = makeSlider("Maximum Particle Velocity", minVal = 1, maxVal = 5, value = 1, step = 1, parent = controlWrapper);
 
-    // Buttons
-    // makeButton("Pause", controlWrapper, noLoop);
-    // makeButton("Resume", controlWrapper, loop);
-    // makeButton("Clear", controlWrapper, clearContent);
+
+    // Buttons  
     makeButton("Download", controlWrapper, () => download());
     makeButton("About", controlWrapper, () => { }, "modal");
     makeButton("GitHub", controlWrapper, () => {
@@ -106,8 +95,8 @@ function download() {
 // Set up (elements only drawn once)
 function setup() {
     // Get window size 
-    let windowWidth = window.innerWidth - 270;
-    let windowHeight = window.innerHeight - 180;
+    windowWidth = window.innerWidth - 270;
+    windowHeight = window.innerHeight - 180;
 
     // Container for everything
     let container = createDiv().class("container");
@@ -140,7 +129,7 @@ function getGrayscaleValue(img, x, y) {
 function drawOnce() {
     background("white");
     // Resize based on image width
-    let dims = getDimensions(img, width, height);
+    let dims = getDimensions(img, windowWidth, windowHeight);
     resizeCanvas(dims.width, dims.height)
     let imgRatio = (dims.width / img.width);
     loadPixels() // don't actually *show* the image but use its pixels!
