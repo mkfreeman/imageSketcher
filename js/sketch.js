@@ -1,7 +1,14 @@
 // Main script to construct the noise field
 let img;
 let fitToScreen = true;
-let xMaxSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, colorSelect;
+let lineLengthSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, colorSelect;
+
+// Load obama on start
+function preload() {
+    // preload() runs once
+    img = loadImage('imgs/obama.jpg');
+}
+
 function imageUpload(file) {
     img = loadImage(file.data, function () {
         drawOnce();
@@ -51,12 +58,20 @@ function makeControls() {
     imgPreview.parent(controlWrapper);
 
     // Sliders
-    xMaxSlider = makeSlider("Max. Line Length (x)", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    let spacingHeader = createDiv("<h3>Spacing</h3>");
+    spacingHeader.parent(controlWrapper);
     xSpacingSlider = makeSlider("Vertical Space Between Pixels", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
     ySpacingSlider = makeSlider("Horizontal Space Between Pixels", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+
+    let lineHeader = createDiv("<h3>Line Attributes</h3>");
+    lineHeader.parent(controlWrapper);
     lineDirectionSelect = makeSelect("Line Direction", options = ["Horizontal", "Vertical", "Diagonal"], value = "Vertical", parent = controlWrapper, drawOnce)
-    colorSelect = makeSelect("Color Setting", options = ["Black and White", "Original"], value = "Black and White", parent = controlWrapper, drawOnce)
+    lineLengthSlider = makeSlider("Line Length", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    lineLengthSelect = makeSelect("Line Length", options = ["Constant", "GrayScale"], value = "Constant", parent = controlWrapper, drawOnce)
     strokeWeightSlider = makeSlider("Stroke Width", minVal = .5, maxVal = 10, value = 1, step = .5, parent = controlWrapper, drawOnce);
+    let colorHeader = createDiv("<h3>Color</h3>");
+    colorHeader.parent(controlWrapper);
+    colorSelect = makeSelect("Color Setting", options = ["Black and White", "Original"], value = "Black and White", parent = controlWrapper, drawOnce)
     // particleSlider = makeSlider("Number of Particles", minVal = 10, maxVal = 10000, value = 500, step = 10, parent = controlWrapper, clearContent);
     // opacitySlider = makeSlider("Opacity", minVal = 1, maxVal = 100, value = 30, step = 1, parent = controlWrapper);
     // strokeWeightSlider = makeSlider("Stroke Weight", minVal = .5, maxVal = 20, value = 2, step = .5, parent = controlWrapper);
@@ -107,6 +122,7 @@ function setup() {
 
     // Set color mode to RGB percentages  
     colorMode(RGB, 100);
+    drawOnce();
 }
 
 function getGrayscaleValue(img, x, y) {
@@ -128,7 +144,7 @@ function drawOnce() {
     resizeCanvas(dims.width, dims.height)
     let imgRatio = (dims.width / img.width);
     loadPixels() // don't actually *show* the image but use its pixels!
-    strokeWeight(strokeWeightSlider.value())
+    // strokeWeight(strokeWeightSlider.value())
     for (let x = 0; x < dims.width; x += xSpacingSlider.value()) {
         for (let y = 0; y < dims.height; y += ySpacingSlider.value()) {
             let posX = round(img.width / dims.width * x);
@@ -144,7 +160,9 @@ function drawOnce() {
                     break;
             }
             stroke(strokeValue);
-            let lineLength = map(grayValue.value, 0, 100, xMaxSlider.value(), 0, .1)
+            strokeWeight(strokeWeightSlider.value());
+            let lineLength = lineLengthSelect.value() == "Constant" ? lineLengthSlider.value() : map(grayValue.value, 0, 100, lineLengthSlider.value(), 1, .1)
+            // let lineLength = 10;
             let direction = lineDirectionSelect.value();
             let xEnd = direction !== "Vertical" ? x + lineLength : x;
             let yEnd = direction !== "Horizontal" ? y + lineLength : y;

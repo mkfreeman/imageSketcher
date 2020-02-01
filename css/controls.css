@@ -1,6 +1,7 @@
 /* Control styles */
 .slider, .color-picker{
     color:#898787;
+    margin-top:10px;
 }
 
 input {
@@ -44,4 +45,11 @@ button.btn {
 
 #control-wrapper a {
     color:inherit;
+}
+
+#control-wrapper h3 {
+    margin-top:5px;
+    font-weight:100;
+    font-size:1.5rem;
+    text-decoration: underline;
 }
