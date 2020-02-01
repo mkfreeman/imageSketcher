@@ -1,7 +1,7 @@
 // Main script to construct the noise field
 let img;
 let fitToScreen = true;
-let lineLengthSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, colorSelect, windowWidth, windowHeight;
+let lineLengthSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, modeSelect, colorSelect, windowWidth, windowHeight;
 
 // Load obama on start
 function preload() {
@@ -57,22 +57,26 @@ function makeControls() {
     imgPreview = createDiv().id("img_preview");
     imgPreview.parent(controlWrapper);
 
-    // Sliders
+    // Mode (line, circles, rectangles)
+    modeSelect = makeSelect("Drawing Mode", options = ["Lines", "Circles", "Rectangles"], value = "Circles", parent = controlWrapper, drawOnce)
+    // Spacing
     let spacingHeader = createDiv("<h3>Spacing</h3>");
     spacingHeader.parent(controlWrapper);
-    xSpacingSlider = makeSlider("Vertical Space Between Pixels", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
-    ySpacingSlider = makeSlider("Horizontal Space Between Pixels", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    xSpacingSlider = makeSlider("Vertical Spacing", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    ySpacingSlider = makeSlider("Horizontal Spacing", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
 
+    // Line features
     let lineHeader = createDiv("<h3>Line Attributes</h3>");
     lineHeader.parent(controlWrapper);
     lineDirectionSelect = makeSelect("Line Direction", options = ["Horizontal", "Vertical", "Diagonal"], value = "Vertical", parent = controlWrapper, drawOnce)
     lineLengthSlider = makeSlider("Line Length", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
     lineLengthSelect = makeSelect("Line Length", options = ["Constant", "GrayScale"], value = "Constant", parent = controlWrapper, drawOnce)
     strokeWeightSlider = makeSlider("Stroke Width", minVal = .5, maxVal = 10, value = 1, step = .5, parent = controlWrapper, drawOnce);
+
+    // Color
     let colorHeader = createDiv("<h3>Color</h3>");
     colorHeader.parent(controlWrapper);
     colorSelect = makeSelect("Color Setting", options = ["Black and White", "Original"], value = "Black and White", parent = controlWrapper, drawOnce)
-
 
     // Buttons  
     makeButton("Download", controlWrapper, () => download());
@@ -128,12 +132,15 @@ function getGrayscaleValue(img, x, y) {
 
 function drawOnce() {
     background("white");
+
     // Resize based on image width
     let dims = getDimensions(img, windowWidth, windowHeight);
     resizeCanvas(dims.width, dims.height)
     let imgRatio = (dims.width / img.width);
     loadPixels() // don't actually *show* the image but use its pixels!
-    // strokeWeight(strokeWeightSlider.value())
+
+    // Get drawing mode
+    let mode = modeSelect.value();
     for (let x = 0; x < dims.width; x += xSpacingSlider.value()) {
         for (let y = 0; y < dims.height; y += ySpacingSlider.value()) {
             let posX = round(img.width / dims.width * x);
@@ -148,14 +155,31 @@ function drawOnce() {
                     strokeValue = grayValue.original;
                     break;
             }
-            stroke(strokeValue);
-            strokeWeight(strokeWeightSlider.value());
-            let lineLength = lineLengthSelect.value() == "Constant" ? lineLengthSlider.value() : map(grayValue.value, 0, 100, lineLengthSlider.value(), 1, .1)
-            // let lineLength = 10;
-            let direction = lineDirectionSelect.value();
-            let xEnd = direction !== "Vertical" ? x + lineLength : x;
-            let yEnd = direction !== "Horizontal" ? y + lineLength : y;
-            line(x, y, xEnd, yEnd);
+            switch (mode) {
+                case "Lines":
+                    stroke(strokeValue);
+                    strokeWeight(strokeWeightSlider.value());
+                    let lineLength = lineLengthSelect.value() == "Constant" ? lineLengthSlider.value() : map(grayValue.value, 0, 100, lineLengthSlider.value(), 1, .1)
+                    // let lineLength = 10;
+                    let direction = lineDirectionSelect.value();
+                    let xEnd = direction !== "Vertical" ? x + lineLength : x;
+                    let yEnd = direction !== "Horizontal" ? y + lineLength : y;
+                    line(x, y, xEnd, yEnd);
+                    break;
+                case "Circles":
+                    stroke(strokeValue);
+                    noFill();
+                    strokeWeight(strokeWeightSlider.value());
+                    let r = map(grayValue.value, 100, 0, 30, 1, .1)
+                    ellipse(x, y, r);
+                case "Rectangles":
+                    stroke(strokeValue);
+                    noFill();
+                    strokeWeight(strokeWeightSlider.value());
+                    let rectSize = map(grayValue.value, 100, 0, 40, 1, .1)
+                    rect(x, y, rectSize, rectSize);
+            }
+
         }
     }
 }

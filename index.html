@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ImageFields</title>
+    <title>ImageLines</title>
     <!-- Twitter and Facebook images -->
-    <meta name="twitter:card" content="summary_large_image">
+    <!-- <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:creator" content="@mf_viz">
     <meta name="twitter:title" content="ImageFields">
     <meta name="twitter:description" content="Generative Image Art Using Particle Simulation">
@@ -16,7 +16,7 @@
     <meta property="og:title" content="ImageFields" />
     <meta property="og:description" content="Generative Image Art Using Particle Simulation" />
     <meta property="og:image" content="http://mfviz.com/imageFields/imgs/sunset_noise_field.png">
-    <meta property="og:url" content="http://mfviz.com/imageFields/">
+    <meta property="og:url" content="http://mfviz.com/imageFields/"> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
@@ -46,7 +46,7 @@
 <body>
     <header>
         <nav>
-            <h1>Image Fields</h1>
+            <h1>Image Lines</h1>
             <p><em>A Generative Art Tool</em></p>
         </nav>
     </header>
@@ -63,17 +63,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        This project uses a particle simulation to visualize a field of directional vectors. The color
-                        of each particle is based on a random point in the uploaded image. It uses <a
-                            href="https://en.wikipedia.org/wiki/Perlin_noise" target="_blank">Perlin Noise</a> to
-                        construct a field of random (but related) forces in horizontal and vertical directions (that
-                        change over time). The project uses the <a href="https://p5js.org/" target="_blank">P5js</a>
-                        library, and is heavily based on this <a target="_blank"
-                            href="https://www.youtube.com/playlist?list=PLRqwX-V7Uu6bgPNQAdxQZpJuJCjeOr7VD">tutorial
-                            series</a> and the corresponding <a target="_blank"
-                            href="https://github.com/CodingTrain/website/tree/master/CodingChallenges/CC_024_PerlinNoiseFlowField/P5">code</a>.<br /><br />
-                        Source code and additional information are available <a
-                            href="https://github.com/mkfreeman/imageFields" target="_blank">on GitHub</a>.
+                        This tool reconstructs images based on the grayscale of each point. Inspiration and sample code
+                        from <a
+                            href="https://www.amazon.com/Generative-Design-Visualize-Program-Processing/dp/1616890770"
+                            target="_blank">Generative Design</a> book. Code is available <a
+                            href="https://github.com/mkfreeman/imageLines" target="_blank">on GitHub</a>.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
