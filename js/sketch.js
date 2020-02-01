@@ -1,6 +1,7 @@
 // Main script to construct the noise field
 let img;
 let fitToScreen = true;
+let xMaxSlider, xSpacingSlider, ySpacingSlider;
 function imageUpload(file) {
     img = loadImage(file.data, function () {
         drawOnce();
@@ -22,7 +23,6 @@ function getDimensions(img, maxWidth, maxHeight) {
             imgWidth = Math.floor(maxWidth);
             imgHeight = Math.floor(img.height * scale);
         } else {
-            console.log("height is max height ", maxWidth, img.width, maxHeight, img.height, scale)
             imgHeight = Math.floor(maxHeight);
             imgWidth = Math.floor(img.width * scale);
         }
@@ -53,6 +53,10 @@ function makeControls() {
     imgPreview.parent(controlWrapper);
 
     // Sliders
+    xMaxSlider = makeSlider("Max. Line Length (x)", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    xSpacingSlider = makeSlider("Vertical Space Between Pixels", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    ySpacingSlider = makeSlider("Horizontal Space Between Pixels", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    lineDirectionSelect = makeSelect("Line Direction", options = ["Horizontal", "Vertical", "Diagonal"], value = "Vertical", parent = controlWrapper, drawOnce)
     // particleSlider = makeSlider("Number of Particles", minVal = 10, maxVal = 10000, value = 500, step = 10, parent = controlWrapper, clearContent);
     // opacitySlider = makeSlider("Opacity", minVal = 1, maxVal = 100, value = 30, step = 1, parent = controlWrapper);
     // strokeWeightSlider = makeSlider("Stroke Weight", minVal = .5, maxVal = 20, value = 2, step = .5, parent = controlWrapper);
@@ -123,19 +127,20 @@ function drawOnce() {
     loadPixels() // don't actually *show* the image but use its pixels!
     stroke(0);
 
-    for (let x = 0; x < dims.width; x += 2) {
-        for (let y = 0; y < dims.height; y += 2) {
+    for (let x = 0; x < dims.width; x += xSpacingSlider.value()) {
+        for (let y = 0; y < dims.height; y += ySpacingSlider.value()) {
             let posX = round(img.width / dims.width * x);
             let posY = round(img.height / dims.height * y);
-            // let posX = x;
-            // let posY = y;
             let grayValue = getGrayscaleValue(img, posX, posY);
             let strokeValue = map(grayValue, 0, 100, 3, .1, .1)
             // console.log(strokeValue)
             // strokeWeight(strokeValue);
             // stroke(color(img.get(posX, posY)))
-            let lineLength = map(grayValue, 0, 100, 15, 1, .1)
-            line(x, y, x + lineLength, y + lineLength);
+            let lineLength = map(grayValue, 0, 100, xMaxSlider.value(), 0, .1)
+            let direction = lineDirectionSelect.value();
+            let xEnd = direction !== "Vertical" ? x + lineLength : x;
+            let yEnd = direction !== "Horizontal" ? y + lineLength : y;
+            line(x, y, xEnd, yEnd);
         }
     }
 }
