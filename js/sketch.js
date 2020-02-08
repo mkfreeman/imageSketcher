@@ -60,12 +60,10 @@ function makeControls() {
     imgPreview = createDiv().id("img_preview");
     imgPreview.parent(controlWrapper);
 
-    // Mode (line, circles, rectangles)
-    modeSelect = makeSelect("Drawing Mode", options = ["Lines", "Circles", "Rectangles"], value = "Circles", parent = controlWrapper, drawOnce)
     // Spacing
     let spacingHeader = createDiv("<h3>Spacing</h3>");
     spacingHeader.parent(controlWrapper);
-    spacingSlider = makeSlider("Spacing", minVal = 1, maxVal = 30, value = 10, step = 1, parent = controlWrapper, drawOnce)
+    spacingSlider = makeSlider("Spacing", minVal = 2, maxVal = 30, value = 10, step = 1, parent = controlWrapper, drawOnce)
     maxFontSizeSlider = makeSlider("Max. Font Size", minVal = 5, maxVal = 30, value = 20, step = 1, parent = controlWrapper, drawOnce)
     minFontSizeSlider = makeSlider("Min. Font Size", minVal = 1, maxVal = 20, value = 8, step = 1, parent = controlWrapper, drawOnce)
 
