@@ -53,3 +53,7 @@ button.btn {
     font-size:1.3rem;
     text-decoration: underline;
 }
+
+.hidden {
+    display:none;
+}

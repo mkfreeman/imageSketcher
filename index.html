@@ -5,18 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>ImageLines</title>
-    <!-- Twitter and Facebook images -->
-    <!-- <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:creator" content="@mf_viz">
-    <meta name="twitter:title" content="ImageFields">
-    <meta name="twitter:description" content="Generative Image Art Using Particle Simulation">
-    <meta name="twitter:image" content="http://mfviz.com/imageFields/imgs/sunset_noise_field.png">
-    <meta property="og:site_name" content="ImageFields" />
-    <meta property="og:title" content="ImageFields" />
-    <meta property="og:description" content="Generative Image Art Using Particle Simulation" />
-    <meta property="og:image" content="http://mfviz.com/imageFields/imgs/sunset_noise_field.png">
-    <meta property="og:url" content="http://mfviz.com/imageFields/"> -->
+    <title>ImageSketcher</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
@@ -46,12 +35,12 @@
 <body>
     <header>
         <nav>
-            <h1>Image Lines</h1>
-            <p><em>A Generative Art Tool</em></p>
+            <h1>Image Sketcher</h1>
+            <p><em>A Generative Art // Pen Plotting Tool</em></p>
         </nav>
     </header>
     <main>
-            <svg id="svg-clone"></svg>
+        <svg id="svg-clone"></svg>
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -65,10 +54,10 @@
                     </div>
                     <div class="modal-body">
                         This tool reconstructs images based on the grayscale of each point. Inspiration and sample code
-                        from <a
+                        from this <a
                             href="https://www.amazon.com/Generative-Design-Visualize-Program-Processing/dp/1616890770"
                             target="_blank">Generative Design</a> book. Code is available <a
-                            href="https://github.com/mkfreeman/imageLines" target="_blank">on GitHub</a>.
+                            href="https://github.com/mkfreeman/imageSketcher" target="_blank">on GitHub</a>.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
