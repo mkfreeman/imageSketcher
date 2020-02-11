@@ -4,9 +4,9 @@ let fitToScreen = true;
 let lineLengthSlider, xSpacingSlider, ySpacingSlider, strokeWeightSlider, lineDirectionSelect, modeSelect, colorSelect, windowWidth, windowHeight;
 const namespace = 'http://www.w3.org/2000/svg';
 let svg;
+
 // Load obama on start
 function preload() {
-    // preload() runs once
     img = loadImage('imgs/obama.jpg');
     svg = document.querySelector("#svg-clone")
     svg.style.position = "absolute";
@@ -62,7 +62,7 @@ function makeControls() {
     imgPreview.parent(controlWrapper);
 
     // Mode (line, circles, rectangles)
-    modeSelect = makeSelect("Drawing Mode", options = ["Lines", "Circles", "Rectangles"], value = "Lines", parent = controlWrapper, drawOnce)
+    modeSelect = makeSelect("Drawing Mode", options = ["Lines", "Circles", "Rectangles"], value = "Circles", parent = controlWrapper, drawOnce)
     // Spacing
     let spacingHeader = createDiv("<h3>Spacing</h3>");
     spacingHeader.parent(controlWrapper);
@@ -72,15 +72,15 @@ function makeControls() {
     // Line features
     let lineHeader = createDiv("<h3>Line Attributes</h3>");
     lineHeader.parent(controlWrapper);
-    lineDirectionSelect = makeSelect("Line Direction", options = ["Horizontal", "Vertical", "Diagonal"], value = "Vertical", parent = controlWrapper, drawOnce)
+    lineDirectionSelect = makeSelect("Line Direction", options = ["Horizontal", "Vertical", "Diagonal"], value = "Diagonal", parent = controlWrapper, drawOnce)
     lineLengthSlider = makeSlider("Line Length", minVal = 1, maxVal = 100, value = 10, step = 1, parent = controlWrapper, drawOnce)
-    lineLengthSelect = makeSelect("Line Length", options = ["Constant", "GrayScale"], value = "Constant", parent = controlWrapper, drawOnce)
+    lineLengthSelect = makeSelect("Line Length", options = ["Constant", "GrayScale"], value = "GrayScale", parent = controlWrapper, drawOnce)
     strokeWeightSlider = makeSlider("Stroke Width", minVal = .5, maxVal = 10, value = 1, step = .5, parent = controlWrapper, drawOnce);
 
     // Color
     let colorHeader = createDiv("<h3>Color</h3>");
     colorHeader.parent(controlWrapper);
-    colorSelect = makeSelect("Color Setting", options = ["Black and White", "Original"], value = "Black and White", parent = controlWrapper, drawOnce)
+    colorSelect = makeSelect("Color Setting", options = ["Black and White", "Original"], value = "Original", parent = controlWrapper, drawOnce)
 
     // Buttons  
     makeButton("Download", controlWrapper, () => download());
@@ -105,7 +105,7 @@ function setup() {
     // Get window size 
     // windowWidth = window.innerWidth - 270;
     // windowHeight = window.innerHeight - 180;
-    windowWidth =  96 * 8;
+    windowWidth = 96 * 8;
     windowHeight = 96 * 6;
 
     // Container for everything
@@ -135,9 +135,7 @@ function getGrayscaleValue(img, x, y) {
         )
     };
 }
-function addSvgLine(x1, y1, x2, y2) {        
-    svg.setAttribute("width", windowWidth);
-    svg.setAttribute("height", windowHeight);
+function addSvgLine(x1, y1, x2, y2) {
     let line = document.createElementNS(namespace, 'line');
     line.style.stroke = "rgb(0,0,0)";
     line.setAttribute('x1', x1);
@@ -146,8 +144,24 @@ function addSvgLine(x1, y1, x2, y2) {
     line.setAttribute('y2', y2);
     svg.appendChild(line);
 }
+
+function addSvgCircle(cx, cy, r, weight) {
+    console.log("weight", weight)
+    let circle = document.createElementNS(namespace, 'circle');
+    circle.setAttribute('cx', cx);
+    circle.setAttribute('cy', cy);
+    circle.setAttribute('r', r);
+    circle.style.fill = "none"
+    circle.style.strokeOpacity = weight;
+    circle.style.stroke = "black";
+    circle.style.strokeWidth = "1px";
+    svg.appendChild(circle);
+}
+
 function drawOnce() {
     background("white");
+    svg.setAttribute("width", windowWidth);
+    svg.setAttribute("height", windowHeight);
     svg.innerHTML = '' // clear svg;
     // Resize based on image width
     let dims = getDimensions(img, windowWidth, windowHeight);
@@ -165,20 +179,21 @@ function drawOnce() {
             let strokeValue;
             switch (colorSelect.value()) {
                 case "Black and White":
-                    // strokeValue = grayValue.value;
-                    strokeValue = "black";
+                    strokeValue = grayValue.value;
+                    // strokeValue = "black";
                     break;
                 case "Original":
                     strokeValue = grayValue.original;
                     break;
             }
+            // conso
             switch (mode) {
                 case "Lines":
                     stroke(strokeValue);
                     strokeWeight(strokeWeightSlider.value());
                     let lineLength = lineLengthSelect.value() == "Constant" ? lineLengthSlider.value() : map(grayValue.value, 0, 100, lineLengthSlider.value(), 1, .1)
                     // let lineLength = 10;
-                    if(lineLength < 5) {
+                    if (lineLength < 5) {
                         break;
                     }
                     let direction = lineDirectionSelect.value();
@@ -189,10 +204,13 @@ function drawOnce() {
                     break;
                 case "Circles":
                     stroke(strokeValue);
-                    noFill();
-                    strokeWeight(strokeWeightSlider.value());
-                    let r = map(grayValue.value, 100, 0, 30, 1, .1)
-                    ellipse(x, y, r);
+                    let weight = strokeWeightSlider.value();
+                    let r = map(grayValue.value, 0, 100, 30, 10, .1) / 2;
+                    if (r < 10) {
+                        r = 1;
+                    }
+                    // ellipse(x, y, r);
+                    addSvgCircle(x, y, r, strokeValue);
                 case "Rectangles":
                     stroke(strokeValue);
                     noFill();
